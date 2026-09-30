@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seamount — Expeditions</title>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Funnel+Display:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper:  #f0ede6;
+  --ink:    #181816;
+  --mid:    #5a5a52;
+  --dim:    #9a9a8e;
+  --faint:  #ccc8be;
+  --border: #d8d4ca;
+  --green:  #2e4a2e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Funnel Sans', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(240,237,230,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.wordmark {
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+}
+
+.header-right { display: flex; align-items: center; gap: 28px; }
+
+.header-nav { display: flex; gap: 28px; }
+.header-nav a {
+  font-size: 11px; color: var(--dim);
+  text-decoration: none; transition: color 0.15s;
+  letter-spacing: 0.04em;
+}
+.header-nav a:hover { color: var(--ink); }
+
+.back-link {
+  font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--dim);
+  text-decoration: none; display: flex;
+  align-items: center; gap: 6px;
+  transition: color 0.15s;
+}
+.back-link:hover { color: var(--ink); }
+.back-link svg {
+  width: 12px; height: 12px;
+  stroke: currentColor; fill: none; stroke-width: 2;
+}
+
+/* ── Hero text band ── */
+.page-hero {
+  padding: 56px 40px 48px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: end;
+}
+
+.page-eyebrow {
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 16px;
+}
+
+.page-title {
+  font-family: 'Funnel Display', sans-serif;
+  font-size: 52px; font-weight: 300;
+  letter-spacing: -0.03em; line-height: 1.0;
+  color: var(--ink);
+}
+
+.page-desc {
+  font-size: 13px; line-height: 1.72;
+  color: var(--mid); max-width: 360px;
+  text-align: right;
+}
+
+/* ── Gallery grid ── */
+.gallery {
+  padding: 0 40px 80px;
+}
+
+/* ─────────────────────────────────────────────────────
+   ENTRY — one adventure post
+   To add a new entry, copy one .entry block and:
+   1. Update the src in <img> to your image filename
+      e.g. src="images/your-photo.jpg"
+   2. Update the location, date, and caption text
+   3. Save and upload the new image to your GitHub
+      repository in the /images/ folder
+───────────────────────────────────────────────────── */
+
+/* Full-width entry */
+.entry {
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0;
+}
+
+.entry:first-child { padding-top: 48px; }
+
+/* Layout A: image left, text right */
+.entry-grid-lr {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Layout B: image right, text left */
+.entry-grid-rl {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Layout C: full-width image, text below */
+.entry-grid-full {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Layout D: two images side by side */
+.entry-grid-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+/* Image containers */
+.entry-img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.entry-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.entry-img-wrap:hover img { transform: scale(1.02); }
+
+/* Fixed height variants */
+.entry-img-wrap.h-tall  { height: 520px; }
+.entry-img-wrap.h-mid   { height: 380px; }
+.entry-img-wrap.h-short { height: 280px; }
+.entry-img-wrap.h-full  { height: 560px; }
+
+/* Placeholder shown when no image is set */
+.img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px dashed var(--faint);
+}
+
+.img-placeholder-label {
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--faint);
+}
+
+.img-placeholder-hint {
+  font-size: 11px; color: var(--faint);
+  text-align: center; max-width: 200px;
+  line-height: 1.5;
+}
+
+/* Text content */
+.entry-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+/* For layout B, text comes first in DOM so we use order */
+.entry-grid-rl .entry-content { order: 1; }
+.entry-grid-rl .entry-img-wrap { order: 2; }
+
+.entry-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.entry-location {
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink);
+}
+
+.entry-date {
+  font-size: 9px; letter-spacing: 0.12em;
+  color: var(--faint);
+}
+
+.entry-title {
+  font-family: 'Funnel Display', sans-serif;
+  font-size: 26px; font-weight: 300;
+  letter-spacing: -0.02em; line-height: 1.1;
+  color: var(--ink); margin-bottom: 14px;
+}
+
+.entry-caption {
+  font-size: 13px; line-height: 1.74;
+  color: var(--mid); font-weight: 300;
+  max-width: 280px;
+}
+
+/* Coord tag — decorative detail */
+.entry-coord {
+  margin-top: 20px;
+  font-size: 9px; letter-spacing: 0.14em;
+  color: var(--faint); text-transform: uppercase;
+}
+
+/* For full-width layout: text in a row below */
+.entry-grid-full .entry-content {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  align-items: start;
+  padding-top: 0;
+}
+
+.entry-grid-full .entry-content-left {}
+.entry-grid-full .entry-content-right .entry-caption { max-width: 460px; }
+
+/* ── Load more (future use) ── */
+.load-more-wrap {
+  padding: 48px 40px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.load-more-note {
+  font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--faint);
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.footer-text {
+  font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--faint);
+}
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  header { padding: 0 20px; }
+  .header-nav { display: none; }
+  .page-hero { padding: 40px 20px 36px; grid-template-columns: 1fr; }
+  .page-title { font-size: 36px; }
+  .page-desc { text-align: left; max-width: 100%; }
+  .gallery { padding: 0 20px 60px; }
+  .entry-grid-lr,
+  .entry-grid-rl,
+  .entry-grid-full .entry-content { grid-template-columns: 1fr; }
+  .entry-grid-rl .entry-content { order: 2; }
+  .entry-grid-rl .entry-img-wrap { order: 1; }
+  .entry-grid-pair { grid-template-columns: 1fr; }
+  .entry-img-wrap.h-tall  { height: 320px; }
+  .entry-img-wrap.h-mid   { height: 260px; }
+  .entry-img-wrap.h-full  { height: 340px; }
+  .entry-caption { max-width: 100% !important; }
+  footer { padding: 14px 20px; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .load-more-wrap { padding: 36px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-img-wrap img { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="wordmark">Seamount</a>
+  <div class="header-right">
+    <nav class="header-nav">
+      <a href="#2025">2025</a>
+    </nav>
+    <a href="seamount-field-tester-welcome.html" class="back-link">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Field Tester
+    </a>
+  </div>
+</header>
+
+<!-- Page hero -->
+<div class="page-hero">
+  <div>
+    <p class="page-eyebrow">Seamount · Field Archive</p>
+    <h1 class="page-title">Expeditions.</h1>
+  </div>
+  <p class="page-desc">Dispatches from the field. Places we've been, things we've observed, conditions we've run in.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     GALLERY
+     ───────────────────────────────────────────────────
+     HOW TO ADD A NEW ENTRY:
+
+     1. Choose a layout (copy one of the examples below):
+        · entry-grid-lr  — image left, text right
+        · entry-grid-rl  — image right, text left
+        · entry-grid-full — full-width image, text below
+        · entry-grid-pair — two images side by side
+
+     2. Set the image src:
+        · Upload your photo to the /images/ folder
+          in your GitHub repository
+        · Change src="images/YOUR-PHOTO.jpg"
+        · Recommended: 1400px wide, JPEG quality 75
+
+     3. Fill in: location, date, title, caption, coord
+
+     4. Save the file and upload to GitHub Pages
+
+     IMAGE HEIGHT CLASSES:
+        · h-full  = 560px  (use for full-width solo)
+        · h-tall  = 520px  (use for left/right layouts)
+        · h-mid   = 380px  (use for pairs)
+        · h-short = 280px  (use for secondary images)
+═══════════════════════════════════════════════════ -->
+
+<div class="gallery" id="2025">
+
+
+  <!-- ─────────────────────────────────────────────
+       ENTRY 1 — Full width
+       Layout: full-width image, text in two columns below
+       ───────────────────────────────────────────── -->
+  <div class="entry">
+    <div class="entry-grid-full">
+
+      <div class="entry-img-wrap h-full">
+        <!-- REPLACE src with your image path, e.g: src="images/dartmoor-run.jpg" -->
+        <img src="0907_15_.png" alt="Trail run on the moors">
+        <!-- If image not set yet, the placeholder below shows instead.
+             Remove the <img> above and uncomment this:
+        <div class="img-placeholder">
+          <span class="img-placeholder-label">Image slot</span>
+          <span class="img-placeholder-hint">Add src="images/your-photo.jpg" to the img tag above</span>
+        </div>
+        -->
+      </div>
+
+      <div class="entry-content">
+        <div class="entry-content-left">
+          <div class="entry-meta">
+            <span class="entry-location">Dartmoor, UK</span>
+            <span class="entry-date">Sep 2025</span>
+          </div>
+          <div class="entry-title">Above the fog line</div>
+          <div class="entry-coord">53.5°N · 3.9°W · 580m</div>
+        </div>
+        <div class="entry-content-right">
+          <p class="entry-caption">
+            Three hours on the high moor in low cloud. The kind of conditions where you stop noticing the cold and start noticing everything else — the way the grass bends, what's growing between the rocks, how the visibility shifts every few minutes. The base layer didn't register as a layer. That's the point.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────
+       ENTRY 2 — Image left, text right
+       ───────────────────────────────────────────── -->
+  <div class="entry">
+    <div class="entry-grid-lr">
+
+      <div class="entry-img-wrap h-tall">
+        <!-- REPLACE src with your image path -->
+        <div class="img-placeholder">
+          <span class="img-placeholder-label">Image slot</span>
+          <span class="img-placeholder-hint">src="images/your-photo.jpg"</span>
+        </div>
+      </div>
+
+      <div class="entry-content">
+        <div class="entry-meta">
+          <span class="entry-location"><!-- Location --></span>
+          <span class="entry-date"><!-- Month Year --></span>
+        </div>
+        <div class="entry-title"><!-- Title --></div>
+        <p class="entry-caption">
+          <!-- Caption — field note style. What you saw, what conditions were like,
+               what you noticed. No brand language. 2-4 sentences. -->
+        </p>
+        <div class="entry-coord"><!-- lat°N · lon°E · alt --></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────
+       ENTRY 3 — Two images side by side
+       ───────────────────────────────────────────── -->
+  <div class="entry">
+
+    <div class="entry-meta" style="margin-bottom: 14px;">
+      <span class="entry-location"><!-- Location --></span>
+      <span class="entry-date"><!-- Month Year --></span>
+    </div>
+    <div class="entry-title" style="margin-bottom: 16px;"><!-- Title --></div>
+
+    <div class="entry-grid-pair" style="margin-bottom: 20px;">
+      <div class="entry-img-wrap h-mid">
+        <!-- REPLACE src with your first image path -->
+        <div class="img-placeholder">
+          <span class="img-placeholder-label">Image 1</span>
+          <span class="img-placeholder-hint">src="images/your-photo-a.jpg"</span>
+        </div>
+      </div>
+      <div class="entry-img-wrap h-mid">
+        <!-- REPLACE src with your second image path -->
+        <div class="img-placeholder">
+          <span class="img-placeholder-label">Image 2</span>
+          <span class="img-placeholder-hint">src="images/your-photo-b.jpg"</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="entry-caption">
+      <!-- Caption -->
+    </p>
+    <div class="entry-coord" style="margin-top: 12px;"><!-- lat°N · lon°E --></div>
+
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────
+       ENTRY 4 — Image right, text left
+       ───────────────────────────────────────────── -->
+  <div class="entry">
+    <div class="entry-grid-rl">
+
+      <div class="entry-content">
+        <div class="entry-meta">
+          <span class="entry-location"><!-- Location --></span>
+          <span class="entry-date"><!-- Month Year --></span>
+        </div>
+        <div class="entry-title"><!-- Title --></div>
+        <p class="entry-caption">
+          <!-- Caption -->
+        </p>
+        <div class="entry-coord"><!-- coordinates --></div>
+      </div>
+
+      <div class="entry-img-wrap h-tall">
+        <!-- REPLACE src with your image path -->
+        <div class="img-placeholder">
+          <span class="img-placeholder-label">Image slot</span>
+          <span class="img-placeholder-hint">src="images/your-photo.jpg"</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+<!-- end .gallery -->
+
+<div class="load-more-wrap">
+  <p class="load-more-note">More entries added as they happen.</p>
+</div>
+
+<footer>
+  <span class="footer-text">Seamount Project · Field Archive</span>
+  <span class="footer-text">The lab is out there.</span>
+</footer>
+
+</body>
+</html>
